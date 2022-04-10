@@ -19,16 +19,21 @@ import {
   Stack,
   AspectRatioBox,
   StatGroup,
+  Button,
 } from "@chakra-ui/core";
 
 import { useSpaceX } from "../utils/use-space-x";
 import { formatDateTime } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
+import { useFavorites, useFavoritesDrawer } from "../contexts/favorites";
 
 export default function Launch() {
   let { launchId } = useParams();
   const { data: launch, error } = useSpaceX(`/launches/${launchId}`);
+  const { isLaunchInFavorites, toggleLaunchToFavorites } = useFavorites();
+  const { openFavorites } = useFavoritesDrawer();
+  const isItemInFavorites = launch ? isLaunchInFavorites(launch) : false;
 
   if (error) return <Error />;
   if (!launch) {
@@ -50,6 +55,18 @@ export default function Launch() {
       />
       <Header launch={launch} />
       <Box m={[3, 6]}>
+        <Button
+          variantColor="teal"
+          mb={2}
+          onClick={() => {
+            toggleLaunchToFavorites(launch);
+            if (!isItemInFavorites) {
+              openFavorites();
+            }
+          }}
+        >
+          {isItemInFavorites ? "Remove from favorites" : "Add to favorites"}
+        </Button>
         <TimeAndLocation launch={launch} />
         <RocketInfo launch={launch} />
         <Text color="gray.700" fontSize={["md", null, "lg"]} my="8">

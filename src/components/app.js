@@ -1,12 +1,27 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { Flex, Text } from "@chakra-ui/core";
-
-import Launches from "./launches";
+import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  SimpleGrid,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/core";
+import Launches, { LaunchItem } from "./launches";
 import Launch from "./launch";
 import Home from "./home";
-import LaunchPads from "./launch-pads";
+import LaunchPads, { LaunchPadItem } from "./launch-pads";
 import LaunchPad from "./launch-pad";
+import { useFavorites, useFavoritesDrawer } from "../contexts/favorites";
 
 export default function App() {
   return (
@@ -19,11 +34,89 @@ export default function App() {
         <Route path="/launch-pads" element={<LaunchPads />} />
         <Route path="/launch-pads/:launchPadId" element={<LaunchPad />} />
       </Routes>
+      <FavoritesDrawer />
     </div>
   );
 }
 
+function FavoritesDrawer() {
+  const { isFavoritesOpen, closeFavorites } = useFavoritesDrawer();
+  const {
+    launches,
+    clearLaunchesFromFavorites,
+    launchPads,
+    clearLaunchPadsFromFavorites,
+  } = useFavorites();
+  return (
+    <Drawer isOpen={isFavoritesOpen} size="lg" onClose={closeFavorites}>
+      <DrawerOverlay />
+      <DrawerContent overflow="auto">
+        <DrawerHeader>Favorites</DrawerHeader>
+        <DrawerBody>
+          <Tabs isFitted variant="enclosed-colored">
+            <TabList mb={2}>
+              <Tab fontWeight="bold">Launches ({launches.length})</Tab>
+              <Tab fontWeight="bold">Launch Pads ({launchPads.length})</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                {launches.length > 0 && (
+                  <Button
+                    onClick={clearLaunchesFromFavorites}
+                    variant="outline"
+                    variantColor="red"
+                    mb={2}
+                  >
+                    Clear all launches
+                  </Button>
+                )}
+                {launches.length === 0 && (
+                  <Text fontWeight="bold">
+                    You don't have any favorite launches
+                  </Text>
+                )}
+                <SimpleGrid spacing={4} mb={4}>
+                  {launches.map((launch) => (
+                    <LaunchItem launch={launch} key={launch.flight_number} />
+                  ))}
+                </SimpleGrid>
+              </TabPanel>
+              <TabPanel>
+                {launchPads.length > 0 && (
+                  <Button
+                    onClick={clearLaunchPadsFromFavorites}
+                    variant="outline"
+                    variantColor="red"
+                    mb={2}
+                  >
+                    Clear all Launch Pads
+                  </Button>
+                )}
+                {launchPads.length === 0 && (
+                  <Text fontWeight="bold">
+                    You don't have any favorite launch pads
+                  </Text>
+                )}
+                <SimpleGrid spacing={4}>
+                  {launchPads.map((launchPad) => (
+                    <LaunchPadItem
+                      launchPad={launchPad}
+                      key={launchPad.site_id}
+                    />
+                  ))}
+                </SimpleGrid>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
 function NavBar() {
+  const { openFavorites } = useFavoritesDrawer();
+  const { launches, launchPads } = useFavorites();
   return (
     <Flex
       as="nav"
@@ -42,6 +135,9 @@ function NavBar() {
       >
         ¡SPACE·R0CKETS!
       </Text>
+      <Button color="black" onClick={openFavorites}>
+        Open Favorites ({launches.length + launchPads.length})
+      </Button>
     </Flex>
   );
 }

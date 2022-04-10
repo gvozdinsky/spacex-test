@@ -15,12 +15,14 @@ import {
   Spinner,
   Stack,
   AspectRatioBox,
+  Button,
 } from "@chakra-ui/core";
 
 import { useSpaceX } from "../utils/use-space-x";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import { LaunchItem } from "./launches";
+import { useFavorites, useFavoritesDrawer } from "../contexts/favorites";
 
 export default function LaunchPad() {
   let { launchPadId } = useParams();
@@ -32,6 +34,12 @@ export default function LaunchPad() {
     sort: "launch_date_utc",
     site_id: launchPad?.site_id,
   });
+
+  const { isLaunchPadInFavorites, toggleLaunchPadToFavorites } = useFavorites();
+  const { openFavorites } = useFavoritesDrawer();
+  const isItemInFavorites = launchPad
+    ? isLaunchPadInFavorites(launchPad)
+    : false;
 
   if (error) return <Error />;
   if (!launchPad) {
@@ -53,6 +61,18 @@ export default function LaunchPad() {
       />
       <Header launchPad={launchPad} />
       <Box m={[3, 6]}>
+        <Button
+          variantColor="teal"
+          mb={2}
+          onClick={() => {
+            toggleLaunchPadToFavorites(launchPad);
+            if (!isItemInFavorites) {
+              openFavorites();
+            }
+          }}
+        >
+          {isItemInFavorites ? "Remove from favorites" : "Add to favorites"}
+        </Button>
         <LocationAndVehicles launchPad={launchPad} />
         <Text color="gray.700" fontSize={["md", null, "lg"]} my="8">
           {launchPad.details}

@@ -1,13 +1,21 @@
 import React from "react";
-import { Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
+import {
+  Badge,
+  Box,
+  Image,
+  SimpleGrid,
+  Text,
+  Flex,
+  IconButton,
+} from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
 import { Link } from "react-router-dom";
-
 import { useSpaceXPaginated } from "../utils/use-space-x";
 import { formatDate } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
+import { useFavorites, useFavoritesDrawer } from "../contexts/favorites";
 
 const PAGE_SIZE = 12;
 
@@ -20,7 +28,7 @@ export default function Launches() {
       sort: "launch_date_utc",
     }
   );
-  console.log(data, error);
+
   return (
     <div>
       <Breadcrumbs
@@ -46,6 +54,10 @@ export default function Launches() {
 }
 
 export function LaunchItem({ launch }) {
+  const { isLaunchInFavorites, toggleLaunchToFavorites } = useFavorites();
+  const { openFavorites } = useFavoritesDrawer();
+  const isItemInFavorites = isLaunchInFavorites(launch);
+
   return (
     <Box
       as={Link}
@@ -99,6 +111,27 @@ export function LaunchItem({ launch }) {
           >
             {launch.rocket.rocket_name} &bull; {launch.launch_site.site_name}
           </Box>
+          <IconButton
+            size="md"
+            ml="auto"
+            variantColor={isItemInFavorites ? "orange" : "gray"}
+            variant="outline"
+            aria-label={
+              isItemInFavorites ? "Remove from favorites" : "Add to favorites"
+            }
+            fontWeight="bold"
+            cursor="pointer"
+            padding={2}
+            icon="star"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              if (!isItemInFavorites) {
+                openFavorites();
+              }
+              toggleLaunchToFavorites(launch);
+            }}
+          />
         </Box>
 
         <Box

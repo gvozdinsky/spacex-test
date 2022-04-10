@@ -1,11 +1,12 @@
 import React from "react";
-import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
+import { Badge, Box, IconButton, SimpleGrid, Text } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
 
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
 import { useSpaceXPaginated } from "../utils/use-space-x";
+import { useFavorites, useFavoritesDrawer } from "../contexts/favorites";
 
 const PAGE_SIZE = 12;
 
@@ -41,7 +42,11 @@ export default function LaunchPads() {
   );
 }
 
-function LaunchPadItem({ launchPad }) {
+export function LaunchPadItem({ launchPad }) {
+  const { isLaunchPadInFavorites, toggleLaunchPadToFavorites } = useFavorites();
+  const { openFavorites } = useFavoritesDrawer();
+  const isItemInFavorites = isLaunchPadInFavorites(launchPad);
+
   return (
     <Box
       as={Link}
@@ -74,6 +79,27 @@ function LaunchPadItem({ launchPad }) {
             {launchPad.attempted_launches} attempted &bull;{" "}
             {launchPad.successful_launches} succeeded
           </Box>
+          <IconButton
+            size="md"
+            ml="auto"
+            variantColor={isItemInFavorites ? "orange" : "gray"}
+            variant="outline"
+            aria-label={
+              isItemInFavorites ? "Remove from favorites" : "Add to favorites"
+            }
+            fontWeight="bold"
+            cursor="pointer"
+            padding={2}
+            icon="star"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              if (!isItemInFavorites) {
+                openFavorites();
+              }
+              toggleLaunchPadToFavorites(launchPad);
+            }}
+          />
         </Box>
 
         <Box
