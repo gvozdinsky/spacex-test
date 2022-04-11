@@ -126,9 +126,6 @@ export function LaunchItem({ launch }) {
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
-              if (!isItemInFavorites) {
-                openFavorites();
-              }
               toggleLaunchToFavorites(launch);
             }}
           />

@@ -94,9 +94,6 @@ export function LaunchPadItem({ launchPad }) {
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
-              if (!isItemInFavorites) {
-                openFavorites();
-              }
               toggleLaunchPadToFavorites(launchPad);
             }}
           />
