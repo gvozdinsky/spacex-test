@@ -238,7 +238,7 @@ function RocketInfo({ launch }) {
 
 function Video({ launch }) {
   return (
-    <AspectRatioBox maxH="400px" ratio={1.7}>
+    <AspectRatioBox maxH="600px" maxW="1200px" mx="auto" ratio={1.7}>
       <Box
         as="iframe"
         title={launch.mission_name}
@@ -253,9 +253,22 @@ function Gallery({ images }) {
   return (
     <SimpleGrid my="6" minChildWidth="350px" spacing="4">
       {images.map((image) => (
-        <a href={image} key={image}>
-          <Image src={image.replace("_o.jpg", "_z.jpg")} />
-        </a>
+        <Box
+          key={image}
+          href={image}
+          target="_blank"
+          rel="noopener noreferrer"
+          overflow="hidden"
+          position="relative"
+          as="a"
+        >
+          <Image
+            src={image.replace("_o.jpg", "_z.jpg")}
+            w="100%"
+            h="100%"
+            objectFit="cover"
+          />
+        </Box>
       ))}
     </SimpleGrid>
   );
