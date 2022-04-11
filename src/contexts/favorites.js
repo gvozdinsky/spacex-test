@@ -7,7 +7,7 @@ export const FavoritesContext = createContext(null);
 const FAVORITE_LAUNCHES_KEY = "favorite-launches";
 const FAVORITE_LAUNCH_PADS_KEY = "favorite-launch-pads";
 
-export function FavortiesProvider({ children }) {
+export function FavoritesProvider({ children }) {
   const {
     isOpen: isFavoritesOpen,
     onClose: closeFavorites,

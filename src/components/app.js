@@ -22,6 +22,7 @@ import Home from "./home";
 import LaunchPads, { LaunchPadItem } from "./launch-pads";
 import LaunchPad from "./launch-pad";
 import { useFavorites, useFavoritesDrawer } from "../contexts/favorites";
+import { Link } from "react-router-dom";
 
 export default function App() {
   return (
@@ -132,6 +133,8 @@ function NavBar() {
         letterSpacing="2px"
         fontWeight="bold"
         fontSize="lg"
+        as={Link}
+        to="/"
       >
         ¡SPACE·R0CKETS!
       </Text>

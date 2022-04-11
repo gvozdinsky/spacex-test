@@ -2,9 +2,9 @@
 
 # ¡Space·Rockets! app
 
-### [👉 Go to the challenge 👈](./CHALLENGE.md)
+### [🚀CHECK LIVE VERSION HOSTED ON VERCEL🚀](https://spacex-test-sigma.vercel.app/)
 
-### [🚀 See the app in action 🚀](https://spacerockets.netlify.app)
+### [👉 Go to the challenge 👈](./CHALLENGE.md)
 
 ## Develop
 
